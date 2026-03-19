@@ -1,0 +1,92 @@
+
+# Data paths
+data:
+  calls_path: "data/raw/calls.csv"
+  cease_path: "data/raw/cease.csv"
+  customers_path: "data/raw/customers.csv"
+  output_dir: "data/processed"
+
+# Feature engineering settings
+features:
+  # Call aggregation settings
+  call_types:
+    - "Tech"
+    - "Loyalty"
+    - "Customer Finance"
+  
+  # Tenure bins (in months)
+  tenure_bins: [0, 6, 12, 24, 48, 1000]
+  tenure_labels: ["0-6m", "6-12m", "1-2y", "2-4y", "4y+"]
+  
+  # Speed tiers
+  speed_bins: [0, 40, 70, 100, 500, 1000]
+  speed_labels: ["Basic", "Standard", "Fast", "Superfast", "Ultrafast"]
+  
+  # Technology mapping
+  technology_encoding:
+    FTTC: 0
+    FTTP: 1
+    ADSL: 2
+
+# Model training settings
+model:
+  # Algorithm: logistic_regression, random_forest, gradient_boosting
+  algorithm: "logistic_regression"
+  
+  # Train/test split
+  test_size: 0.25
+  random_state: 42
+  
+  # Cross-validation
+  cv_folds: 5
+  
+  # Algorithm-specific parameters
+  logistic_regression:
+    max_iter: 1000
+    class_weight: "balanced"
+  
+  random_forest:
+    n_estimators: 100
+    max_depth: 10
+    min_samples_split: 5
+    class_weight: "balanced"
+  
+  gradient_boosting:
+    n_estimators: 100
+    learning_rate: 0.1
+    max_depth: 5
+    min_samples_split: 5
+
+# Risk categorization
+risk:
+  # Probability thresholds for risk categories
+  thresholds:
+    low: 0.3
+    medium: 0.6
+    high: 0.8
+  
+  # Priority score weights
+  priority_weights:
+    churn_probability: 0.7
+    customer_value: 0.3
+
+# Output settings
+output:
+  # Report formats
+  generate_visualizations: true
+  visualization_format: "png"
+  visualization_dpi: 150
+  
+  # Model artifacts
+  model_dir: "models"
+  model_filename: "churn_model_{timestamp}.pkl"
+  
+  # Predictions
+  predictions_dir: "predictions"
+  priority_list_filename: "customer_priority_list.csv"
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/pipeline.log"
